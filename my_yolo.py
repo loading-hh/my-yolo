@@ -58,6 +58,17 @@ class ConvolutionalBlock(nn.Module):
 
 
 class Yolo(nn.Module):
+    '''
+    description: 搭建my yolo完整模型。
+    param {*} self
+    param {*} block_list是模型每块有几个ConvolutionalBlock块
+    param {*} in_channels是模型每个卷积层的输入通道数列表
+    param {*} out_channels是模型每个卷积层的输出通道数列表
+    param {*} kernel_sizes是模型每个卷积层的卷积核大小列表
+    param {*} paddings是每个卷积层的填充数列表
+    param {*} N
+    return {*}
+    '''    
     def __init__(self, block_list, in_channels, out_channels, kernel_sizes, paddings, N):
         super().__init__()
         self.block_num = len(block_list)
@@ -88,3 +99,4 @@ if __name__ == "__main__":
     net = Yolo(block_list, in_channels, out_channels, kernel_sizes, paddings, 12)
     x = torch.rand((1, 3, 416, 416))
     print(net(x).shape)
+    print(type(True))
