@@ -1,7 +1,7 @@
 '''
 Author: loading-hh
 Date: 2025-03-24 19:41:39
-LastEditTime: 2025-03-26 15:50:47
+LastEditTime: 2025-04-05 19:41:22
 LastEditors: loading-hh
 Description:
 FilePath: \my-yolo\datasets.py
@@ -129,6 +129,34 @@ def start(sourceDir, targetDir, resize_w, resize_h, csv=False):
             print(f"image {i} 转换完成")
         label.to_csv(os.path.join(targetDir, "labels.csv"))
         
+        
+class MyLoadDataset(torch.utils.data.Dataset):
+    def __init__(self, img_path, label_path, transforms = None):
+        super().__init__()
+        self.img_path = os.path.join(img_path, "images")
+        self.csv_path = os.path.join(label_path, "label.csv")
+        self.csv = pd.read_csv(self.label_path)
+        self.transforms = transforms
+        
+        img = []
+        label = []
+        bounding_box = []
+        for i in range(len(self.csv)):
+            img_path = os.path.join(self.img_path, self.csv["img_name"][i])
+            img.append(Image.open(img_path))
+            label.append(torch.tensor(self.csv["label"][i]))
+            bounding_box.append(torch.tensor([self.csv["xmin"][i], self.csv["ymin"][i], self.csv["xmax"][i], self.csv["ymax"][i]]))
+        self.img = img
+        self.label = label
+        self.bounding_box = bounding_box
+        
+    def __getitem__(self, index):
+        a = 2
+    
+    def __len__(self):
+        return len(self.img)
+        
+
 
 if __name__ == "__main__":
     sourceDir = r"C:\Users\CCU6\Desktop\banana-detection\banana-detection\bananas_val"
