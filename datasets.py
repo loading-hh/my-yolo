@@ -1,7 +1,7 @@
 '''
 Author: loading-hh
 Date: 2025-03-24 19:41:39
-LastEditTime: 2025-04-05 19:41:22
+LastEditTime: 2025-04-11 11:31:37
 LastEditors: loading-hh
 Description:
 FilePath: \my-yolo\datasets.py
@@ -134,8 +134,8 @@ class MyLoadDataset(torch.utils.data.Dataset):
     def __init__(self, img_path, label_path, transforms = None):
         super().__init__()
         self.img_path = os.path.join(img_path, "images")
-        self.csv_path = os.path.join(label_path, "label.csv")
-        self.csv = pd.read_csv(self.label_path)
+        self.csv_path = os.path.join(label_path, "labels.csv")
+        self.csv = pd.read_csv(self.csv_path)
         self.transforms = transforms
         
         img = []
@@ -151,14 +151,29 @@ class MyLoadDataset(torch.utils.data.Dataset):
         self.bounding_box = bounding_box
         
     def __getitem__(self, index):
-        a = 2
-    
+        data = self.img[index]
+        gt_box = self.bounding_box[index]
+        label = self.label[index]
+        if self.transforms is not None:
+            data = self.transforms(data)
+            
+        return data, gt_box, label
+            
     def __len__(self):
         return len(self.img)
         
 
 
 if __name__ == "__main__":
-    sourceDir = r"C:\Users\CCU6\Desktop\banana-detection\banana-detection\bananas_val"
-    targetDir = r"./dataset/test"
-    start(sourceDir, targetDir, 416, 416, True)
+    # sourceDir = r"C:\Users\CCU6\Desktop\banana-detection\banana-detection\bananas_val"
+    # targetDir = r"./dataset/test"
+    # start(sourceDir, targetDir, 416, 416, True)
+    trans = transforms.Compose([
+                            transforms.ToTensor(),   #transforms.ToTensor()会归一化
+                            ])
+    load = MyLoadDataset(r"C:\Users\CCU6\Desktop\自己的东西\yolov2改\my-yolo\dataset\test", 
+                         r"C:\Users\CCU6\Desktop\自己的东西\yolov2改\my-yolo\dataset\test", 
+                         trans)
+    
+    print(len(load))
+    print(load[0])

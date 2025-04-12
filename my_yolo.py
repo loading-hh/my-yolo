@@ -66,7 +66,7 @@ class Yolo(nn.Module):
     param {*} out_channels是模型每个卷积层的输出通道数列表
     param {*} kernel_sizes是模型每个卷积层的卷积核大小列表
     param {*} paddings是每个卷积层的填充数列表
-    param {*} N
+    param {*} N为最后一个卷积的输出通道数
     return {*}
     '''    
     def __init__(self, block_list, in_channels, out_channels, kernel_sizes, paddings, N):
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     out_channels = [[32], [64], [128, 64, 128], [256, 128, 256], [512, 256, 512, 256, 512], [1024, 512, 1024, 512, 1024]]
     kernel_sizes = [[3], [3], [3, 1, 3], [3, 1, 3], [3, 1, 3, 1, 3], [3, 1, 3, 1, 3]]
     paddings = [[1], [1], [1, 0, 1], [1, 0, 1], [1, 0, 1, 0, 1], [1, 0, 1, 0, 1]]
-    net = Yolo(block_list, in_channels, out_channels, kernel_sizes, paddings, 12)
+    net = Yolo(block_list, in_channels, out_channels, kernel_sizes, paddings, 14)
     x = torch.rand((1, 3, 416, 416))
     print(net(x).shape)
     print(type(True))
